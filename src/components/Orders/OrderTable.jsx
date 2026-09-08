@@ -1,26 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { TableCell, TableRow } from "../ui/table";
 import { Building2Icon, CreditCardIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import Image from "next/image";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import Link from "next/link";
 
-export default function OrderTable({ order }) {
+export default function OrderTable({ order, status, onStatusChange }) {
   const hasDiscount = !!order?.order_discount;
-  console.log(order);
+
+  const handleChange = (value) => {
+    onStatusChange({ orderId: order.id, status: value });
+  };
+
   return (
     <>
       <TableRow>
         <TableCell className="font-medium text-base">
           {order?.package?.name}
         </TableCell>
-
+        <TableCell className="flex items-center gap-1 text-muted-foreground text-sm">
+          {order?.order_number}
+        </TableCell>
         <TableCell>
           <span className="font-medium text-gray-700">{order?.user.name}</span>
           <span className="text-xs block text-muted-foreground">
             {order?.user?.email}
           </span>
         </TableCell>
-
         <TableCell className="flex items-center gap-1 text-muted-foreground text-sm">
           {order?.payment_type === "manual" ? (
             <>
@@ -32,7 +46,8 @@ export default function OrderTable({ order }) {
             </>
           )}
         </TableCell>
-        <TableCell className="text-sm text-muted-foreground">
+
+        {/* <TableCell className="text-sm text-muted-foreground">
           <span
             dangerouslySetInnerHTML={{
               __html: order?.currency,
@@ -53,12 +68,12 @@ export default function OrderTable({ order }) {
               __html: order?.currency,
             }}
           />
-          {/* {hasDiscount ? } */}
           {hasDiscount
             ? order?.amount -
               order?.amount * (order?.order_discount?.discount_amount / 100)
             : order?.amount}
-        </TableCell>
+        </TableCell> */}
+
         <TableCell>
           <span
             className={`capitalize px-2.5 py-0.5 text-xs font-semibold rounded-full border ${
@@ -70,10 +85,10 @@ export default function OrderTable({ order }) {
             {order.status}
           </span>
         </TableCell>
-        <TableCell className="text-sm text-muted-foreground">
+        {/* <TableCell className="text-sm text-muted-foreground">
           {order?.manual_payment?.transaction_id}
-        </TableCell>
-        <TableCell className="text-muted-foreground font-medium">
+        </TableCell> */}
+        {/* <TableCell className="text-muted-foreground font-medium">
           <Dialog>
             <DialogTrigger className="cursor-pointer">
               View Document
@@ -90,6 +105,30 @@ export default function OrderTable({ order }) {
               </div>
             </DialogContent>
           </Dialog>
+        </TableCell> */}
+        <TableCell>
+          <Select value={order.status} onValueChange={handleChange}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {status.map((stat) => (
+                  <SelectItem key={stat.value} value={stat.value}>
+                    {stat.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </TableCell>
+        <TableCell>
+          <Link
+            href={`/dashboard/orders/${order?.id}`}
+            className="cursor-pointer"
+          >
+            View Details
+          </Link>
         </TableCell>
       </TableRow>
     </>

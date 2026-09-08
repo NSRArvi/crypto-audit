@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import usePostMutation from "@/hooks/usePostMutation";
 import Loader from "../shared/Loader/Loader";
+import { useState } from "react";
+import { Eye, EyeClosed } from "lucide-react";
 const badges = [
   "Products",
   "Categories",
@@ -19,6 +21,7 @@ const badges = [
 
 export default function Login() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
   const form = useForm({
     defaultValues: {
       email: "",
@@ -128,7 +131,7 @@ export default function Login() {
               />
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 relative">
               <Controller
                 name="password"
                 control={form.control}
@@ -140,7 +143,7 @@ export default function Login() {
                     </FieldLabel>
                     <Input
                       {...field}
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
                       className=" h-11 rounded-xl transition-all"
                     />
@@ -150,6 +153,24 @@ export default function Login() {
                   </Field>
                 )}
               />
+              <div className="absolute top-11 right-3">
+                {showPassword ? (
+                  <span onClick={() => setShowPassword((show) => !show)}>
+                    <EyeClosed
+                      size={18}
+                      className="text-muted-foreground cursor-pointer"
+                    />
+                  </span>
+                ) : (
+                  <span onClick={() => setShowPassword((show) => !show)}>
+                    {" "}
+                    <Eye
+                      size={18}
+                      className="text-muted-foreground cursor-pointer"
+                    />
+                  </span>
+                )}
+              </div>
             </div>
             <Button
               type="submit"

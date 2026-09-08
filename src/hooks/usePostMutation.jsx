@@ -10,13 +10,16 @@ export default function usePostMutation({
 
   return useMutation({
     mutationFn: async (payload) => {
+      const isFormData = payload instanceof FormData;
       const res = await fetch(`${BASE_URL}${endpoint}`, {
         method: "POST",
+
         headers: {
-          "Content-Type": "application/json",
+          ...(!isFormData && { "Content-Type": "application/json" }),
           ...(token && { Authorization: `Bearer ${token}` }),
         },
-        body: JSON.stringify(payload),
+
+        body: isFormData ? payload : JSON.stringify(payload),
       });
 
       const data = await res.json();

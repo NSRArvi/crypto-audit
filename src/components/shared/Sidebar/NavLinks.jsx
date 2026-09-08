@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   BoxIcon,
   Building2Icon,
+  CircleDotDashed,
   GlobeIcon,
   ShoppingCart,
   Users,
@@ -10,25 +11,31 @@ import {
 const menuItems = [
   {
     id: 1,
+    href: "/dashboard/request-order",
+    icon: CircleDotDashed,
+    label: "Request Orders",
+  },
+  {
+    id: 2,
     href: "/dashboard/products",
     icon: BoxIcon,
     label: "Products",
   },
   {
-    id: 2,
+    id: 3,
     href: "/dashboard/countries",
     icon: GlobeIcon,
     label: "Countries",
   },
   {
-    id: 3,
+    id: 4,
     href: "/dashboard/bank",
     icon: Building2Icon,
     label: "Bank Information",
   },
 
   {
-    id: 4,
+    id: 5,
     href: "/dashboard/orders",
     icon: ShoppingCart,
     label: "Manage Orders",

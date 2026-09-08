@@ -1,13 +1,17 @@
 "use client";
 
+import { PaginationSkeleton } from "@/components/skeleton/PaginationSkeleton";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function Pagination({ totalPages }) {
+export default function Pagination({ totalPages, isLoading }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const currentPage = Number(searchParams.get("page")) || 1;
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const goToPage = (page) => {
     if (page < 1 || page > totalPages) return;
@@ -21,28 +25,40 @@ export default function Pagination({ totalPages }) {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2">
-        <button
-          disabled={currentPage <= 1}
-          onClick={() => goToPage(currentPage - 1)}
-          className="px-3 py-1.5 rounded-md border disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
+      {isLoading ? (
+        <PaginationSkeleton />
+      ) : (
+        <div className="flex items-center justify-center gap-2">
+          <Button
+            variant="outline"
+            disabled={currentPage <= 1}
+            onClick={() => goToPage(currentPage - 1)}
+            className="disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-brand"
+          >
+            <ArrowLeftIcon />
+          </Button>
 
-        <span className="text-sm text-muted-foreground">
-          Page {currentPage} of {totalPages}
-        </span>
+          {pages.map((page) => (
+            <Button
+              variant="outline"
+              key={page}
+              onClick={() => goToPage(page)}
+              className="cursor-pointer"
+            >
+              {page}
+            </Button>
+          ))}
 
-        <button
-          disabled={currentPage >= totalPages}
-          onClick={() => goToPage(currentPage + 1)}
-          className="px-3 py-1.5 rounded-md border disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          Next
-        </button>
-      </div>
-      {/*  */}
+          <Button
+            variant="outline"
+            disabled={currentPage >= totalPages}
+            onClick={() => goToPage(currentPage + 1)}
+            className="px-3 py-1.5 rounded-md border disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer text-brand"
+          >
+            <ArrowRightIcon />
+          </Button>
+        </div>
+      )}
     </>
   );
 }

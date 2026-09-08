@@ -37,7 +37,6 @@ export default function Pricing({ defaultValues, onNext, onBack }) {
       });
     }
   }, [defaultValues, reset]);
-  console.log(defaultValues.items);
 
   const { fields, append, remove } = useFieldArray({
     control,
